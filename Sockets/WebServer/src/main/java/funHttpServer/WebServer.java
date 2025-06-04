@@ -217,6 +217,97 @@ class WebServer {
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
 
+                 } else if (request.startsWith("multiply")) {
+          // parse query params: /multiply?num1=3&num2=4
+          String query = "";
+          if (request.contains("?")) {
+            query = request.substring(request.indexOf("?") + 1);
+          }
+
+          Map<String, String> params = new HashMap<>();
+          for (String pair : query.split("&")) {
+            String[] kv = pair.split("=");
+            if (kv.length == 2) {
+              params.put(URLDecoder.decode(kv[0], "UTF-8"), URLDecoder.decode(kv[1], "UTF-8"));
+            }
+          }
+
+          if (!params.containsKey("num1") || !params.containsKey("num2")) {
+            // Missing one or both parameters
+            String errorBody = "<html><body><h1>400 Bad Request</h1><p>Missing parameters. Please use: /multiply?num1=3&num2=4</p></body></html>";
+            builder.append("HTTP/1.1 400 Bad Request\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("Content-Length: ").append(errorBody.getBytes().length).append("\n");
+            builder.append("\n");
+            builder.append(errorBody);
+          } else {
+            try {
+              int num1 = Integer.parseInt(params.get("num1"));
+              int num2 = Integer.parseInt(params.get("num2"));
+              int result = num1 * num2;
+              String body = "<html><body><h1>Result: " + result + "</h1></body></html>";
+
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("Content-Length: ").append(body.getBytes().length).append("\n");
+              builder.append("\n");
+              builder.append(body);
+            } catch (NumberFormatException e) {
+              String errorBody = "<html><body><h1>400 Bad Request</h1><p>Invalid number format. Please ensure num1 and num2 are integers.</p></body></html>";
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("Content-Length: ").append(errorBody.getBytes().length).append("\n");
+              builder.append("\n");
+              builder.append(errorBody);
+            }
+          }
+
+         } else if (request.startsWith("multiply")) {
+          // parse query params: /multiply?num1=3&num2=4
+          String query = "";
+          if (request.contains("?")) {
+            query = request.substring(request.indexOf("?") + 1);
+          }
+
+          Map<String, String> params = new HashMap<>();
+          for (String pair : query.split("&")) {
+            String[] kv = pair.split("=");
+            if (kv.length == 2) {
+              params.put(URLDecoder.decode(kv[0], "UTF-8"), URLDecoder.decode(kv[1], "UTF-8"));
+            }
+          }
+
+          if (!params.containsKey("num1") || !params.containsKey("num2")) {
+            // Missing one or both parameters
+            String errorBody = "<html><body><h1>400 Bad Request</h1><p>Missing parameters. Please use: /multiply?num1=3&num2=4</p></body></html>";
+            builder.append("HTTP/1.1 400 Bad Request\n");
+            builder.append("Content-Type: text/html; charset=utf-8\n");
+            builder.append("Content-Length: ").append(errorBody.getBytes().length).append("\n");
+            builder.append("\n");
+            builder.append(errorBody);
+          } else {
+            try {
+              int num1 = Integer.parseInt(params.get("num1"));
+              int num2 = Integer.parseInt(params.get("num2"));
+              int result = num1 * num2;
+              String body = "<html><body><h1>Result: " + result + "</h1></body></html>";
+
+              builder.append("HTTP/1.1 200 OK\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("Content-Length: ").append(body.getBytes().length).append("\n");
+              builder.append("\n");
+              builder.append(body);
+            } catch (NumberFormatException e) {
+              String errorBody = "<html><body><h1>400 Bad Request</h1><p>Invalid number format. Please ensure num1 and num2 are integers.</p></body></html>";
+              builder.append("HTTP/1.1 400 Bad Request\n");
+              builder.append("Content-Type: text/html; charset=utf-8\n");
+              builder.append("Content-Length: ").append(errorBody.getBytes().length).append("\n");
+              builder.append("\n");
+              builder.append(errorBody);
+            }
+          }
+
+
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
           // check out https://docs.github.com/rest/reference/
